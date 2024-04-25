@@ -5,6 +5,6 @@
 </p>
 
 <p align="center">
-    <a href="https://adventofcode.com/">Advent of Code website</a>
+    <a href="https://adventofcode.com/2023">Advent of Code website</a>
 </p>
 
