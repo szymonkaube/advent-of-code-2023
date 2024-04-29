@@ -1,11 +1,11 @@
-def parse_from_filepath(filepath: str) -> list[list[dict]]:
+def parse_from_filepath(filepath: str):
     with open(filepath) as f:
         text = f.read()
         lines = text.splitlines()
 
     # Parsing
     lines.append("") # we add "" to dont allow parsing loop get index out of range
-    seeds = lines[0][7:].split(" ")
+    seeds = [int(seed) for seed in lines[0][7:].split(" ")]
     available_map_names = ["seed-to-soil map:", "soil-to-fertilizer map:",
                         "fertilizer-to-water map:", "water-to-light map:",
                         "light-to-temperature map:", "temperature-to-humidity map:",
@@ -21,15 +21,21 @@ def parse_from_filepath(filepath: str) -> list[list[dict]]:
             while True:
                 if lines[j] == "":
                     break
-                start_end_length = lines[j].split(" ")
-                start_end_length_dict = {"dest_start": start_end_length[0],
-                                        "source_start": start_end_length[1],
-                                        "length": start_end_length[2]}
-                current_map.append(start_end_length_dict)
+                start_end_length = [int(num) for num in lines[j].split(" ")]
+                current_map.append(start_end_length)
                 j += 1
             maps_in_text.append(current_map)
-    return maps_in_text
+    return (seeds, maps_in_text)
 
 
-parsed_data = parse_from_filepath("input.txt")
+seeds, maps = parse_from_filepath("input.txt")
+
+# Mapping from seed to soil for one seed
+seed = seeds[0]
+seed_to_soil_map = maps[0]
+for mapping in seed_to_soil_map:
+    dest_start, source_start, length = mapping
+    seed_position_wrt_map = seed - source_start
+    if 0 <= seed_position_wrt_map <= length - 1:
+        seed = dest_start + seed_position_wrt_map
 
