@@ -4,7 +4,7 @@ def parse_from_filepath(filepath: str) -> list:
         text = f.read()
         lines = text.splitlines()
     # Parsing
-    lines.append("") # we add "" to dont allow parsing loop get index out of range
+    lines.append("") # we add "" to dont allow the loop to get index out of range
     seeds = [int(seed) for seed in lines[0][7:].split(" ")]
     available_map_names = ["seed-to-soil map:", "soil-to-fertilizer map:",
                         "fertilizer-to-water map:", "water-to-light map:",
@@ -28,13 +28,23 @@ def parse_from_filepath(filepath: str) -> list:
     return (seeds, maps_in_text)
 
 
-seeds, maps = parse_from_filepath("input.txt")
-
 def map_number(number: int, mappings: list) -> int:
+    # Look for appropriate mapping
     for mapping in mappings:
         dest_start, source_start, length = mapping
         seed_position_wrt_map = number - source_start
+        # If the mapping is found, map the number
         if 0 <= seed_position_wrt_map <= length - 1:
-            number = dest_start + seed_position_wrt_map
+            return dest_start + seed_position_wrt_map
     return number
 
+
+if __name__ == "__main__":
+    seeds, maps = parse_from_filepath("input.txt")
+    n_of_maps = len(maps)
+    mapped_numbers = seeds
+    for i in range(n_of_maps):
+        mapped_numbers = [map_number(number, maps[i]) for number in mapped_numbers]
+    answer = min(mapped_numbers)
+    
+    print(answer)
