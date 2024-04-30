@@ -1,8 +1,8 @@
-def parse_from_filepath(filepath: str):
+def parse_from_filepath(filepath: str) -> list:
+    # Reading from the file
     with open(filepath) as f:
         text = f.read()
         lines = text.splitlines()
-
     # Parsing
     lines.append("") # we add "" to dont allow parsing loop get index out of range
     seeds = [int(seed) for seed in lines[0][7:].split(" ")]
@@ -30,12 +30,11 @@ def parse_from_filepath(filepath: str):
 
 seeds, maps = parse_from_filepath("input.txt")
 
-# Mapping from seed to soil for one seed
-seed = seeds[0]
-seed_to_soil_map = maps[0]
-for mapping in seed_to_soil_map:
-    dest_start, source_start, length = mapping
-    seed_position_wrt_map = seed - source_start
-    if 0 <= seed_position_wrt_map <= length - 1:
-        seed = dest_start + seed_position_wrt_map
+def map_number(number: int, mappings: list) -> int:
+    for mapping in mappings:
+        dest_start, source_start, length = mapping
+        seed_position_wrt_map = number - source_start
+        if 0 <= seed_position_wrt_map <= length - 1:
+            number = dest_start + seed_position_wrt_map
+    return number
 
